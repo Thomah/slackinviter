@@ -1,0 +1,29 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Get the version
+      id: get_version
+      run: "echo ::set-output name=VERSION::$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')"
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag slackinviter:latest
+    - name: Tag the image for Docker Hub
+      run: docker tag slackinviter:latest slackinviter:${{ steps.get_version.outputs.VERSION }}
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - name: Publish to Docker Hub
+      run: docker push slackinviter:${{ steps.get_version.outputs.VERSION }}
