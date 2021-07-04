@@ -22,8 +22,8 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag slackinviter:latest
     - name: Tag the image for Docker Hub
-      run: docker tag slackinviter:latest slackinviter:${{ steps.get_version.outputs.VERSION }}
+      run: docker tag slackinviter:latest thomah/slackinviter:${{ steps.get_version.outputs.VERSION }}
     - name: Login to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Publish to Docker Hub
-      run: docker push slackinviter:${{ steps.get_version.outputs.VERSION }}
+      run: docker push thomah/slackinviter:${{ steps.get_version.outputs.VERSION }}
