@@ -31,7 +31,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# existingSecret: slackinviter
+existingSecret: slackinviter
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
